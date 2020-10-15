@@ -27,22 +27,22 @@ except ImportError:
 print("All imports okay. Yay!")
 
 
-def print_picture(im_green, c_image, result, grad):
-    fig, (ax_orig, ax_mag, ax_ang) = plt.subplots(3, 1, figsize=(12, 30))
-    ax_orig.imshow(im_green)
-    ax_orig.set_title('Original')
-    ax_orig.set_axis_off()
-    ax_mag.imshow(np.absolute(grad))
-    ax_mag.set_title('Gradient magnitude')
-    ax_mag.set_axis_off()
-    ax_ang.imshow(np.absolute(result))
-    ax_ang.set_title('Gradient orientation')
-    ax_ang.set_axis_off()
-    fig.show()
-    fig, (max_mag) = plt.subplots(1, 1, figsize=(6, 15))
-    max_mag.set_axis_off()
-    max_mag.imshow(np.absolute(c_image))
-    fig.show()
+# def print_picture(im_green, c_image, result, grad):
+#     fig, (ax_orig, ax_mag, ax_ang) = plt.subplots(3, 1, figsize=(12, 30))
+#     ax_orig.imshow(im_green)
+#     ax_orig.set_title('Original')
+#     ax_orig.set_axis_off()
+#     ax_mag.imshow(np.absolute(grad))
+#     ax_mag.set_title('Gradient magnitude')
+#     ax_mag.set_axis_off()
+#     ax_ang.imshow(np.absolute(result))
+#     ax_ang.set_title('Gradient orientation')
+#     ax_ang.set_axis_off()
+#     fig.show()
+#     fig, (max_mag) = plt.subplots(1, 1, figsize=(6, 15))
+#     max_mag.set_axis_off()
+#     max_mag.imshow(np.absolute(c_image))
+#     fig.show()
 
 
 def non_max_suppression(dim, result, c_image, color):
@@ -67,7 +67,7 @@ def green_picture(im_green, filter_kernel, c_image):
     grad = sg.convolve2d(im_green, filter_kernel, boundary='symm', mode='same')
     result = ndimage.maximum_filter(grad, size=5)
     x_green, y_green = non_max_suppression(18, result, c_image, [0, 255, 0])
-    print_picture(im_green, c_image, result, grad)
+    # print_picture(im_green, c_image, result, grad)
 
     return x_green, y_green
 
@@ -75,8 +75,8 @@ def green_picture(im_green, filter_kernel, c_image):
 def red_picture(im_red, filter_kernel, c_image):
     grad = sg.convolve2d(im_red, filter_kernel, boundary='symm', mode='same')
     result = ndimage.maximum_filter(grad, size=5)
-    print_picture(im_red, c_image, result, grad)
     x_red, y_red = non_max_suppression(14, result, c_image, [255, 0, 0])
+    # print_picture(im_red, c_image, result, grad)
 
     return x_red, y_red
 
