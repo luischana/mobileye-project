@@ -137,7 +137,7 @@ def test_find_tfl_lights(image_path, json_path=None, fig_num=None):
         what = ['traffic light']
         objects = [o for o in gt_data['objects'] if o['label'] in what]
 
-    x_red, y_red, x_green_x, y_green = find_tfl_lights(image, some_threshold=42)
+    x_red, y_red, x_green, y_green = find_tfl_lights(image, some_threshold=42)
 
 
 def main(argv=None):
