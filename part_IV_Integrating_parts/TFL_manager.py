@@ -1,5 +1,5 @@
 import pickle
-import tensorflow.keras
+from tensorflow.keras.models import load_model
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -8,8 +8,8 @@ from part_I_Traffic_lights_attention.run_attention import find_tfl_lights
 from part_II_Creating_data_training_CNN.data_set import pad_with_zeros
 from part_III_Estimating_distance.SFM import calc_TFL_dist
 
-from .frame_container import FrameContainer
-from .network import network
+from frame_container import FrameContainer
+from network import network
 
 
 class TFL:
@@ -52,29 +52,23 @@ class TFL:
 
         return candidate, auxiliary
 
-
     @staticmethod
     def get_tfl_coord(candidate, auxiliary, image_path):
         traffic = []
         auxiliary_traffic = []
+        model = load_model("model.h5")
+        image = np.array(Image.open(image_path))
+        image_pad = np.pad(image, 40, pad_with_zeros)[:, :, 40:43]
 
-        with open("model.json", 'r') as file_json:
-            model = file_json.read()
-            loaded_model = tensorflow.keras.models.model_from_json(model)
-            loaded_model.load_weights("weights.h5")
+        for i, coord in enumerate(candidate):
+            crop_images = image_pad[coord[0]:coord[0] + 81, coord[1]:coord[1] + 81]
+            result = network(crop_images, model)
 
-            image = np.array(Image.open(image_path))
-            image_pad = np.pad(image, 40, pad_with_zeros)[:, :, 40:43]
+            if result:
+                traffic.append(coord)
+                auxiliary_traffic.append(auxiliary[i])
 
-            for i, coord in enumerate(candidate):
-                crop_images = image_pad[coord[0]:coord[0] + 81, coord[1]:coord[1] + 81]
-                result = network(crop_images, loaded_model)
-
-                if result:
-                    traffic.append(coord)
-                    auxiliary_traffic.append(auxiliary[i])
-
-            return traffic, auxiliary_traffic
+        return traffic, auxiliary_traffic
 
 
     def dist(self, current_frame):
@@ -93,17 +87,17 @@ class TFL:
 
 
     def visual_images(self, image_path, current_frame, auxiliary_traffic, candidate, auxiliary, dist):
-        fig, (ax_source_lights, ax_is_tfl, ax_dist) = plt.subplots(3, 1, figsize=(12, 30))
+        fig, (ax_source_lights, ax_is_tfl, ax_dist) = plt.subplots(1, 3, figsize=(12, 30))
 
         ax_source_lights.imshow(current_frame.img)
         x, y = candidate[:, 1], candidate[:, 0]
         ax_source_lights.scatter(x, y, c=auxiliary, s=1)
-        ax_source_lights.set_title('source_light')
+        ax_source_lights.set_title('part1')
 
         ax_is_tfl.imshow(current_frame.img)
         x, y = np.array(current_frame.traffic_light)[:, 1], np.array(current_frame.traffic_light)[:, 0]
         ax_is_tfl.scatter(x, y, c=auxiliary_traffic, s=1)
-        ax_is_tfl.set_title('traffic_light')
+        ax_is_tfl.set_title('part2')
 
         if dist != list():
             x_coord, y_coord, image_dist = self.get_coord_tfl(current_frame, image_path)
@@ -112,5 +106,5 @@ class TFL:
             for i in range(len(x_coord)):
                 ax_dist.text(y_coord[i], x_coord[i], r'{0:.1f}'.format(dist[i]), color='r')
 
-        ax_dist.set_title('dist of tfl')
+        ax_dist.set_title('part3')
         fig.show()

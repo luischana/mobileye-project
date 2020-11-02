@@ -1,4 +1,4 @@
-from .TFL_manager import TFL
+from TFL_manager import TFL
 import matplotlib.pyplot as plt
 
 
@@ -15,7 +15,7 @@ class Controller:
         data = open("play_list.pls", "r+")
         read_lines = data.readlines()
         image_path = [line[:-1] for line in read_lines]
-        tfl_manager = TFL(image_path[0], int(image_path[1]), int(image_path[1])+len(image_path[2:])-1)
+        tfl_manager = TFL(image_path[0])
 
         return image_path[2:], tfl_manager, image_path[1]
 
