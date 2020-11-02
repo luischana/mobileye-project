@@ -45,12 +45,12 @@ class FrameContainer(object):
 # read data and run
 curr_frame_id = 26
 prev_frame_id = 25
-prev_img_path = 'dusseldorf_000049_0000' + str(prev_frame_id) + '_leftImg8bit.png'
-curr_img_path = 'dusseldorf_000049_0000' + str(curr_frame_id) + '_leftImg8bit.png'
+prev_img_path = 'data/dusseldorf_000049_0000' + str(prev_frame_id) + '_leftImg8bit.png'
+curr_img_path = 'data/dusseldorf_000049_0000' + str(curr_frame_id) + '_leftImg8bit.png'
 prev_container = FrameContainer(prev_img_path)
 curr_container = FrameContainer(curr_img_path)
 
-pkl_path = 'dusseldorf_000049.pkl'
+pkl_path = 'data/dusseldorf_000049.pkl'
 
 with open(pkl_path, 'rb') as pklfile:
     data = pickle.load(pklfile, encoding='latin1')

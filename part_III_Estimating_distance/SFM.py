@@ -73,7 +73,8 @@ def decompose(EM):
 
 # rotate the points - pts using R
 def rotate(pts, R):
-    ones = np.ones((3, 1), int)
+    # ones = np.ones((3, 1), int)
+    ones = np.ones((len(pts[:, 0]), 1), int)
     rotate_mat = np.dot(R, (np.hstack([pts, ones])).T)
 
     return (rotate_mat[:2]/rotate_mat[2]).T
@@ -88,7 +89,7 @@ def find_corresponding_points(p, norm_pts_rot, foe):
     distance = [[abs((m * p_rot[0] + n - p_rot[1]) / np.sqrt(pow(m, 2) + 1)), i] for i, p_rot in enumerate(norm_pts_rot)]
 
     # return the closest point and its index
-    index, val = min(distance, key=itemgetter(0))
+    val, index = min(distance, key=itemgetter(0))
 
     return index, norm_pts_rot[index]
 
