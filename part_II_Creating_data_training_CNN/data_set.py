@@ -40,7 +40,7 @@ def read_data(data_file, label_file, index):
 def correct_data(data_file, label_file, index):
     img, label = read_data(data_file, label_file, index)
     plt.imshow(img)
-    plt.title("Traffic light1" if label else "Not Traffic light")
+    plt.title("Traffic light" if label else "Not Traffic light")
     plt.show()
 
 
@@ -95,7 +95,7 @@ def coord_to_crop(image_label, image, x_coord, y_coord, first, last, labels, dat
         crop(image, labels, x_coord[index_not_traffic], y_coord[index_not_traffic], 0, data)
 
 
-def pad_with_zeros(vector, pad_width):
+def pad_with_zeros(vector, pad_width, iaxis, kwargs):
     vector[:pad_width[0]] = 0
     vector[-pad_width[1]:] = 0
 
@@ -131,8 +131,9 @@ def set_data(name_dir):
                         coord_to_crop(label, image, x_coord, y_coord, 0, len(x_coord) - 1, labels, data)
                         coord_to_crop(label, image, x_coord, y_coord, len(x_coord) - 1, 0, labels, data)
 
+
 # set_data('train')
 # set_data('val')
-# change(r"./data/Data_dir/train")
+# change(f"./data/Data_dir/train")
 # correct_data(f"./data/Data_dir/train/data.bin", f"./data/Data_dir/train/labels.bin", 0)
 # correct_data(f"./data/Data_dir/val/data.bin", f"./data/Data_dir/val/labels.bin", 2)
